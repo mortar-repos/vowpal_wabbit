@@ -42,6 +42,7 @@ class io_buf {
   
   static const int READ = 1;
   static const int WRITE = 2;
+  static const int WRITE_TO_STDOUT = 3;
 
   void init(){
     size_t s = 1 << 16;
@@ -88,6 +89,16 @@ class io_buf {
 	  cout << "can't open: " << name << " for read or write, exiting on error" << strerror(errno) << endl;
 	  throw exception();
 	}
+      break;
+
+    case WRITE_TO_STDOUT:
+      #ifdef _WIN32
+        ret = _fileno(stdout);
+      #else
+        ret = fileno(stdout);
+      #endif
+
+      files.push_back(ret);
       break;
 
     default:

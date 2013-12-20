@@ -242,8 +242,11 @@ void dump_regressor(vw& all, string reg_name, bool as_text)
   string start_name = reg_name+string(".writing");
   io_buf io_temp;
 
-  io_temp.open_file(start_name.c_str(), all.stdin_off, io_buf::WRITE);
-  
+  if (reg_name.compare("stdout") == 0)
+    io_temp.open_file("dummy", all.stdin_off, io_buf::WRITE_TO_STDOUT);
+  else
+    io_temp.open_file(start_name.c_str(), all.stdin_off, io_buf::WRITE);
+
   save_load_header(all, io_temp, false, as_text);
   all.l->save_load(io_temp, false, as_text);
 
